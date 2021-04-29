@@ -1,0 +1,158 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8" />
+<title>ZIM - Code Creativity</title>
+
+	<script src="https://zimjs.org/cdn/1.3.2/createjs.js"></script>
+	<script src="https://zimjs.org/cdn/cat/00/zim.js"></script>
+	<!-- use zimjs.com/distill for minified individual functions! -->
+	<!-- 1. Import the pizzazz JavaScript file after the createjs code -->
+	<script src="https://zimjs.org/cdn/pizzazz_01.js"></script>
+	
+	<script src="https://zimjs.com/bits/footer9.js"></script><!-- you will not need this -->
+	
+	<script>
+	
+	// soy hotspot 13:15
+// SCALING OPTIONS
+// scaling can have values as follows with full being the default
+// "fit"	sets canvas and stage to dimensions and scales to fit inside window size
+// "outside"	sets canvas and stage to dimensions and scales to fit outside window size
+// "full"	sets stage to window size with no scaling
+// "tagID"	add canvas to HTML tag of ID - set to dimensions if provided - no scaling
+
+var scaling = "fit"; // this will resize to fit inside the screen dimensions
+var width = 1000;
+var height = 800;
+var color = dark; // or any HTML color such as "violet" or "#333333"
+var outerColor = light;
+
+//const frame = new Frame({assets:{id:"special", src:"http://romiserver.work/assets/anat_mic_tgi.PNG", noCORSonImage:true}});
+//const frame = new Frame({assets:"http://romiserver.work/assets/anat_mic_tgi.PNG"});
+// si corro este desde local me da este error.
+//Access to XMLHttpRequest at 'http://romiserver.work/assets/anat_mic_tgi.PNG' from origin 
+//'http://127.0.0.1:5500' has been blocked by CORS policy: No 'Access-Control-Allow-Origin' header is present on the requested resource.
+//var frame = new Frame(scaling, width, height, color, outerColor, assets, path,  waiter);
+const frame = new Frame(scaling,width,height,color,outerColor,{assets:"anat_mic_tgi.png", path:"assets/"});
+
+frame.on("ready", () => {
+    var stage = frame.stage;
+    var stageW = frame.width;
+    var stageH = frame.height;
+
+
+   imagen= asset("anat_mic_tgi.png").centerReg().mov(0, -40);
+
+    var boton_gira_imagen = new Button({corner:0})
+		.pos(102, 641);
+	var text = "click las etiquetas de la imagen para ver más información";
+	var mensaje = new Label(text, 30, null, green, orange)
+		.pos(boton_gira_imagen.x + boton_gira_imagen.width + 30, boton_gira_imagen.y + boton_gira_imagen.height / 2)
+		.expand(); // makes hitArea bigger - can set how much too
+
+	// used these to determine rectangle for vertical DAN ZEN logo (hit P for pixels)
+	// new Grid(stage).addTo();
+	// new Guide(stage).addTo();
+	// new Guide(stage,false).addTo();
+	pizzazz.listShapes();
+
+
+	
+
+var message1 = new Label({
+	size:42,
+	font:"rockwell",
+	text:"Aqui va informacion",
+	color:"rgba(256,256,256,.9)",
+	align:"center",
+	lineHeight:50
+}).sha();
+
+
+var mucosa_panel = new zim.Pane({
+	width:200, height:60,
+	label:message1,
+	modal:false,
+	// 2. Use pizzazz.createShape(type, color, width, height) (or use your own Shape, Bitmap, Container, etc.)
+	// 3. Pass the shape into the Button or Pane class as the background parameter
+	backing:pizzazz.makeShape("roadside", pink).sca(5)
+});
+var mucosa_label = new Label({
+	size:42,
+	font:"rockwell",
+	text:"Aqui va informacion",
+	color:"rgba(256,256,256,.9)",
+	align:"center",
+	lineHeight:50
+}).sha();
+
+var submucosa_label = new Label({
+	size:42,
+	font:"rockwell",
+	text:"Aqui va informacion",
+	color:"rgba(256,256,256,.9)",
+	align:"center",
+	lineHeight:50
+}).sha();
+
+var mucosa_pane = new zim.Pane({
+	width:200, height:60,
+	label:mucosa_label,
+	modal:false,
+	// 2. Use pizzazz.createShape(type, color, width, height) (or use your own Shape, Bitmap, Container, etc.)
+	// 3. Pass the shape into the Button or Pane class as the background parameter
+	backing:pizzazz.makeShape("roadside", pink).sca(5)
+});
+
+var submucosa_pane = new zim.Pane({
+	width:200, height:60,
+	label:submucosa_label,
+	modal:false,
+	// 2. Use pizzazz.createShape(type, color, width, height) (or use your own Shape, Bitmap, Container, etc.)
+	// 3. Pass the shape into the Button or Pane class as the background parameter
+	backing:pizzazz.makeShape("roadside", pink).sca(5)
+});
+
+	// 2. add them to a HotSpots() object
+	var hs = new HotSpots([
+		// 3. pass in a callback function for each spot
+		{page:stage, rect:[616,422,152,35], call:function(){submucosa_pane.show();}},
+		{page:stage, rect:[608,315,135,187], call:function(){mucosa_pane.show();}},
+		{page:stage, rect:boton_gira_imagen, call:animation}, // or could have used function literal here as well
+		{page:stage, rect:mensaje, call:fade}
+	]);
+
+	// 4. make the callback functions
+	function animation() {
+		imagen.animate({rotation:imagen.rotation+360}, .300);
+	}
+	function fade() {
+		boton_gira_imagen.animate({props:{alpha:0}, time:.300, rewind:true});
+	}
+
+	// 5. show() the HotSpots if you want to (will show rectangles only - not objects)
+	// hs.show(); // a little hard to see in this case - but play around with position to test
+
+
+	var title = "Anatomía de la pared del tracto Gastro Intestinal";
+	var label = new Label(title, 30, null, "#666")
+		.pos(20, 20);
+
+	var docItems = "Frame,Label,Button,Waiter,animate,pos,mov,addTo,centerReg,expand,HotSpots,Guide,Grid,zog";
+	makeFooter(stage, stageW, stageH, null, docItems); // ZIM BITS footer - you will not need this
+
+    stage.update();
+}); //fin de ready
+
+</script>	
+
+
+<meta name="viewport" content="width=device-width, user-scalable=no" />
+
+</head>
+
+<body>
+<!-- canvas with id="myCanvas" is made by zim Frame -->
+</body>
+</html>
